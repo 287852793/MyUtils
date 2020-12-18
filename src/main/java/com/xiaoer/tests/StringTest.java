@@ -45,15 +45,29 @@ public class StringTest {
 //		System.out.println(new Date().getTime());
 		
 		
-		String s = "insert into table() values(?,?,?,?,?,?,?,?,?,?)";
-		int i = 5;
-		String geom = "test geom";
-		s = s.substring(0, s.indexOf("values(") + 7 + i * 2) + geom +","+ s.substring(s.indexOf("values(") + 7 + i * 2);
-		System.out.println(s);
+//		String s = "insert into table() values(?,?,?,?,?,?,?,?,?,?)";
+//		int i = 5;
+//		String geom = "test geom";
+//		s = s.substring(0, s.indexOf("values(") + 7 + i * 2) + geom +","+ s.substring(s.indexOf("values(") + 7 + i * 2);
+//		System.out.println(s);
+//		
+//		Integer a = null;
+//		if (1 == a) {
+//			System.out.println(123);
+//		}
 		
-		Integer a = null;
-		if (1 == a) {
-			System.out.println(123);
-		}
+//		String p = "/adf/df///asdf//ef//fasd/f";
+//		p = p.replaceAll("/+", "/");
+//		System.out.println(p);
+		
+//		String s = "/aaa/bbb.zip";
+//		System.out.println(s.substring(s.lastIndexOf("/") + 1));
+		
+		String s = "abcdeg.zip";
+		System.out.println(s.substring(1, 5));
+		System.out.println(s.substring(0, s.lastIndexOf(".")));
+		System.out.println(String.format("%.2f", 66666 * 100.0d / 88888));
+		
+		
 	}
 }
