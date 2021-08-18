@@ -7,7 +7,8 @@ import java.util.concurrent.TimeUnit;
 
 public class SemaphoreTest {
 	public static void main(String[] args) {
-		final Semaphore semaphore = new Semaphore(0);
+		final Semaphore semaphore = new Semaphore(-1);
+		semaphore.release();
 		semaphore.release();
 		ExecutorService executorService = Executors.newCachedThreadPool();
 		for (int i = 0; i < 10; i++) {
