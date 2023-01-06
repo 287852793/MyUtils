@@ -1,6 +1,6 @@
 package com.xiaoer.leetcode;
 
-public class _123_买卖股票的最佳时机III {
+public class _0123_买卖股票的最佳时机III {
 	
 	public static int maxProfit(int[] prices) {
 		int fstBuy = Integer.MIN_VALUE, fstSell = 0;

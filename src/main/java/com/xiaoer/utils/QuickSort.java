@@ -4,6 +4,11 @@ import java.util.Arrays;
 
 public class QuickSort {
 
+	public static int[] f2(int[] rooms) {
+		sort(rooms, 0, rooms.length - 1);
+		return rooms;
+	}
+
 	public static void sort(int[] s, int l, int r) {
 		if (l < r) {
 			int i = l, j = r, x = s[l];
