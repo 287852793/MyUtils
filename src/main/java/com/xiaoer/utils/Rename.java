@@ -7,7 +7,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.nio.file.Files;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -21,6 +20,11 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 public class Rename extends JFrame {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4175917557862059659L;
+
 	public Rename() {
 		init();
 	}
@@ -31,8 +35,8 @@ public class Rename extends JFrame {
 		setLayout(null);
 		Toolkit tl = Toolkit.getDefaultToolkit();
 		Dimension screenSize = tl.getScreenSize();
-		int startX = (int)(screenSize.getWidth() / 2 - 210);
-		int startY = (int)(screenSize.getHeight() / 2 - 150);
+		int startX = (int) (screenSize.getWidth() / 2 - 210);
+		int startY = (int) (screenSize.getHeight() / 2 - 150);
 		setBounds(startX, startY, 450, 375);
 		setResizable(false);
 	}
@@ -116,15 +120,13 @@ public class Rename extends JFrame {
 		JLabel cbl = new JLabel("修改方式:");
 		cbl.setBounds(30, 45, 100, 25);
 		pane.add(cbl);
-		final JComboBox cb = new JComboBox(
-				new String[] { "删除匹配内容", "前端新增内容", "末端新增内容", "中间新增内容(在修改位置之后新增)" });
+		final JComboBox<?> cb = new JComboBox<>(new String[] { "删除匹配内容", "前端新增内容", "末端新增内容", "中间新增内容(在修改位置之后新增)" });
 		cb.setBounds(95, 45, 345, 25);
 		pane.add(cb);
 		cb.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				String s = (String)cb.getSelectedItem();
+				String s = (String) cb.getSelectedItem();
 				if (s.indexOf("中间新增") > -1) {
 					t2.setEnabled(true);
 				} else {
@@ -151,12 +153,11 @@ public class Rename extends JFrame {
 		batchbtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					String s = (String)cb.getSelectedItem();
+					String s = (String) cb.getSelectedItem();
 					String r = dir.getText();
 					File root = new File(r);
 					if (root.isDirectory()) {
 						File[] files = root.listFiles();
-						String names = "";
 						String rep = t1.getText();
 
 						if (s.indexOf("删除") > -1) {
@@ -181,8 +182,7 @@ public class Rename extends JFrame {
 								String oldName = f.getName();
 								if (f.isFile()) {
 									int idx = oldName.lastIndexOf("\\.");
-									String newName = oldName.substring(0, idx) + rep
-											+ oldName.substring(idx, oldName.length());
+									String newName = oldName.substring(0, idx) + rep + oldName.substring(idx, oldName.length());
 									File file = new File(root + "/" + newName);
 									f.renameTo(file);
 								}
@@ -194,11 +194,8 @@ public class Rename extends JFrame {
 
 								if (f.isFile() && oldName.indexOf(idx) > -1) {
 
-									String newName = oldName.substring(0, oldName.indexOf(idx)
-											+ idx.length())
-											+ rep
-											+ oldName.subSequence(oldName.indexOf(idx) + idx.length(),
-											oldName.length());
+									String newName = oldName.substring(0, oldName.indexOf(idx) + idx.length()) + rep
+											+ oldName.subSequence(oldName.indexOf(idx) + idx.length(), oldName.length());
 									File file = new File(root + "/" + newName);
 									f.renameTo(file);
 								}
