@@ -51,6 +51,31 @@
 			<version>2.4</version>
 			<classifier>jdk15</classifier>
 		</dependency>
+		<dependency>
+			<groupId>org.geotools</groupId>
+			<artifactId>gt-main</artifactId>
+			<version>21.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.geotools</groupId>
+			<artifactId>gt-shapefile</artifactId>
+			<version>21.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.geotools</groupId>
+			<artifactId>gt-epsg-hsql</artifactId>
+			<version>21.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.geotools</groupId>
+			<artifactId>gt-geometry</artifactId>
+			<version>21.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.geotools</groupId>
+			<artifactId>gt-geojson</artifactId>
+			<version>21.2</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
