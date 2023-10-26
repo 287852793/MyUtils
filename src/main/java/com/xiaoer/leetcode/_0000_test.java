@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,6 +18,8 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
 import java.util.Stack;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import sun.misc.Unsafe;
 import java.lang.reflect.Field;
@@ -25,17 +28,1935 @@ import java.lang.reflect.Field;
 public class _0000_test {
 	public static void main(String[] args) {
 		_0000_test test = new _0000_test();
-
 		long t = System.currentTimeMillis();
+		// test start
+		System.out.println(Math.ceil(4 * 1.0/ 3));
+		System.out.println('0' ^ 1);
 
-		int[] nums = new int[] { 4, 6, 5, 9, 3, 7 };
-		int[] l = new int[] { 0, 0, 2 };
-		int[] r = new int[] { 2, 3, 5 };
-		System.out.println(test.checkArithmeticSubarrays(nums, l, r));
-
+		// test end
 		System.out.println("cost time : " + (System.currentTimeMillis() - t));
 	}
-	
+
+	// 2530
+	public long maxKelements(int[] nums, int k) {
+		PriorityQueue<Integer> queue = new PriorityQueue<>((o1, o2) -> {
+			if (o2 - o1 > 0) {
+				return 1;
+			} else {
+				return -1;
+			}
+		});
+		for (int n : nums) {
+			queue.offer(n);
+		}
+		long s = 0;
+		for (int i = 0; i < k; i++) {
+			Integer n = queue.poll();
+			s += n;
+			n = (int)(Math.ceil(n  * 1.0 / 3));
+			queue.offer(n);
+		}
+		return s;
+	}
+
+	// 2560
+	public int minCapability(int[] nums, int k) {
+		int len = nums.length;
+		int[][] note = new int[k][len];
+		note[0][0] = nums[0];
+		for (int i = 1; i < len; i++) {
+			note[0][i] = Math.min(note[0][i - 1], nums[i]);
+		}
+		for (int i = 1; i < k; i++) {
+			note[i][2 * i] = Math.max(note[i - 1][2 * (i - 1)], nums[2 * i]);
+			for (int j = 2 * i + 1; j < len; j++) {
+				note[i][j] = Math.min(Math.max(note[i - 1][j - 2], nums[j]), note[i][j - 1]);
+			}
+		}
+		return note[k - 1][len - 1];
+	}
+
+	// 1404
+	public int numSteps(String s) {
+		if (b2402) {
+
+		}
+		char[] cs = s.toCharArray();
+		char[] arr = new char[cs.length];
+		Arrays.fill(arr, '0');
+		arr[arr.length - 1] = '1';
+		int i = 0;
+		while (!Arrays.equals(cs, arr)) {
+			if (s.endsWith("0")) {
+				for (char c : cs) {
+					c = (char) (c ^ 1);
+				}
+			} else {
+				int o = cs.length - 1;
+				while (cs[o] == '1') {
+					cs[o] = '0';
+					o--;
+				}
+				cs[o] = '1';
+			}
+		}
+		return i;
+	}
+
+	// 2808
+	public int minimumSeconds(List<Integer> nums) {
+		int len = nums.size();
+		Map<Integer, int[]> note = new HashMap<>();
+		for (int i = 0; i < nums.size(); i++) {
+			int n = nums.get(i);
+			if (!note.containsKey(n)) {
+				note.put(n, new int[] { i, i, -1 });
+			} else {
+				int[] t = note.get(n);
+				t[2] = Math.max(i - t[1] - 1, t[2]);
+				t[1] = i;
+
+			}
+		}
+		for (Integer i : note.keySet()) {
+			System.out.println(i + ": " + Arrays.toString(note.get(i)));
+		}
+
+		int res = len - 1;
+		for (Integer i : note.keySet()) {
+			int[] t = note.get(i);
+			if (t[2] == -1) {
+				continue;
+			}
+			res = Math.min(res, Math.max(t[2], len - t[1] + t[0] - 1));
+		}
+
+		return res / 2 + (res % 2 == 0 ? 0 : 1);
+	}
+
+	// mianshi 16.19
+	public int[] pondSizes(int[][] land) {
+		List<Integer> list = new ArrayList<>();
+		for (int i = 0; i < land.length; i++) {
+			for (int j = 0; j < land[i].length; j++) {
+				if (land[i][j] == 0) {
+					int t = 1;
+					List<int[]> l = new ArrayList<>();
+					l.add(new int[] { i, j });
+					land[i][j] = 1;
+					while (!l.isEmpty()) {
+						List<int[]> ll = new ArrayList<>();
+						for (int k = 0; k < l.size(); k++) {
+							int a = l.get(i)[0], b = l.get(i)[1];
+							if (a > 0 && b > 0 && land[a - 1][b - 1] == 0) {
+								t++;
+								land[a - 1][b - 1] = 1;
+								ll.add(new int[] { a - 1, b - 1 });
+							}
+							if (b > 0 && land[a][b - 1] == 0) {
+								t++;
+								land[a][b - 1] = 1;
+								ll.add(new int[] { a, b - 1 });
+							}
+							if (a < land.length - 1 && b > 0 && land[a + 1][b - 1] == 0) {
+								t++;
+								land[a + 1][b - 1] = 1;
+								ll.add(new int[] { a + 1, b - 1 });
+							}
+							if (a < land.length - 1 && land[a + 1][b] == 0) {
+								t++;
+								land[a + 1][b] = 1;
+								ll.add(new int[] { a + 1, b });
+							}
+							if (a < land.length - 1 && b < land[0].length - 1 && land[a + 1][b + 1] == 0) {
+								t++;
+								land[a + 1][b + 1] = 1;
+								ll.add(new int[] { a + 1, b + 1 });
+							}
+							if (b < land[0].length - 1 && land[a][b + 1] == 0) {
+								t++;
+								land[a][b + 1] = 1;
+								ll.add(new int[] { a, b + 1 });
+							}
+							if (a > 0 && b < land[0].length - 1 && land[a - 1][b + 1] == 0) {
+								t++;
+								land[a - 1][b + 1] = 1;
+								ll.add(new int[] { a - 1, b + 1 });
+							}
+							if (a > 0 && land[a - 1][b] == 0) {
+								t++;
+								land[a - 1][b] = 1;
+								ll.add(new int[] { a - 1, b });
+							}
+						}
+						l = ll;
+					}
+					list.add(t);
+				}
+			}
+		}
+		int[] res = new int[list.size()];
+		for (int i = 0; i < res.length; i++) {
+			res[i] = list.get(i);
+		}
+		Arrays.sort(res);
+		return res;
+	}
+
+	// 1170
+	public int[] numSmallerByFrequency(String[] queries, String[] words) {
+		int[] q = new int[queries.length];
+		for (int i = 0; i < q.length; i++) {
+			q[i] = f1170(queries[i]);
+		}
+		int[] note = new int[2001];
+		for (int i = 0; i < words.length; i++) {
+			note[f1170(words[i])]++;
+		}
+		for (int i = note.length - 2; i >= 0; i--) {
+			note[i] += note[i + 1];
+		}
+		int[] res = new int[q.length];
+		for (int i = 0; i < q.length; i++) {
+			res[i] = note[q[i] + 1];
+		}
+		return res;
+	}
+
+	private int f1170(String s) {
+		int t = 0, c = 'z' + 1;
+		for (int i = 0; i < s.length(); i++) {
+			if (s.charAt(i) < c) {
+				t = 1;
+				c = s.charAt(i);
+			} else if (s.charAt(i) == c) {
+				t++;
+			}
+		}
+		return t;
+	}
+
+	// 2432
+	public boolean equalFrequency(String word) {
+		int[] note = new int[26];
+		for (int i = 0; i < word.length(); i++) {
+			note[word.charAt(i) - 'a']++;
+		}
+		Map<Integer, Integer> m = new HashMap<>();
+		for (int i = 0; i < note.length; i++) {
+			if (note[i] == 0) {
+				continue;
+			}
+			m.put(note[i], m.getOrDefault(note[i], 0) + 1);
+		}
+		if (m.size() > 2) {
+			return false;
+		} else if (m.size() == 2) {
+			List<int[]> list = new ArrayList<>();
+			for (int i : m.keySet()) {
+				list.add(new int[] { i, m.get(i) });
+			}
+			for (int i = 0; i < list.size(); i++) {
+				if (list.get(i)[0] == 1 && list.get(i)[1] == 1) {
+					return true;
+				}
+			}
+			if (list.get(0)[0] > list.get(1)[0]) {
+				if (list.get(0)[0] - list.get(1)[0] == 1 && list.get(0)[1] == 1) {
+					return true;
+				} else {
+					return false;
+				}
+			} else {
+				if (list.get(1)[0] - list.get(0)[0] == 1 && list.get(1)[1] == 1) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+		} else {
+			for (int i : m.keySet()) {
+				if (m.get(i) > 1 && i != 1) {
+					return false;
+				} else {
+					return true;
+				}
+			}
+		}
+		return false;
+
+	}
+
+	// 337
+	public int rob3(TreeNode root) {
+		int[] arr = f337(root);
+		return Math.max(arr[0], arr[1]);
+	}
+
+	private int[] f337(TreeNode n) {
+		if (n == null) {
+			return new int[] { 0, 0 };
+		}
+		if (n.left == null && n.right == null) {
+			return new int[] { n.val, 0 };
+		}
+		int[] a = f337(n.left);
+		int[] b = f337(n.right);
+		return new int[] { n.val + a[1] + b[1], Math.max(a[1] + b[1], a[0] + b[0]) };
+	}
+
+	// 813
+	public double largestSumOfAverages(int[] nums, int k) {
+		Arrays.sort(nums);
+		double res = 0;
+
+		int s = 0, t = 0, n = nums.length - k + 1;
+		for (int i = nums.length - 1; i >= 0; i--) {
+			if (k > 1) {
+				s += nums[i];
+				k--;
+			} else {
+				t += nums[i];
+			}
+		}
+		res = s + t * 1.0 / n;
+		return res;
+	}
+
+	// 848
+	public String shiftingLetters(String s, int[] shifts) {
+		for (int i = shifts.length - 2; i >= 0; i--) {
+			shifts[i] = (shifts[i + 1] + shifts[i]) % 26;
+		}
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < shifts.length; i++) {
+			char c = (char) (((s.charAt(i) - 'a' + shifts[i]) % 26) + 'a');
+			sb.append(c);
+		}
+		return sb.toString();
+	}
+
+	// 970
+	public List<Integer> powerfulIntegers(int x, int y, int bound) {
+		List<Integer> res = new ArrayList<>();
+		int ii = 0, a = 1;
+		if (x == 1) {
+			ii = 1;
+		} else {
+			while (a <= bound) {
+				a *= x;
+				ii++;
+			}
+		}
+		int jj = 0, b = 1;
+		if (y == 1) {
+			jj = 1;
+		} else {
+			while (b <= bound) {
+				b *= y;
+				jj++;
+			}
+		}
+
+		for (int i = 0; i < ii; i++) {
+			for (int j = 0; j < jj; j++) {
+				int t = (int) Math.pow(x, i) + (int) Math.pow(y, j);
+				if (t <= bound && !res.contains(t)) {
+					res.add(t);
+				}
+			}
+		}
+		return res;
+	}
+
+	// 1222
+	public List<List<Integer>> queensAttacktheKing(int[][] queens, int[] king) {
+		List<List<Integer>> res = new ArrayList<>();
+		Set<Integer> note = new HashSet<>();
+		for (int i = 0; i < queens.length; i++) {
+			note.add(queens[i][0] * 10 + queens[i][1]);
+		}
+
+		int i = king[0], j = king[1];
+
+		while (i > 0) {
+			i--;
+			if (note.contains(i * 10 + j)) {
+				List<Integer> r = new ArrayList<>();
+				r.add(i);
+				r.add(j);
+				res.add(r);
+				break;
+			}
+		}
+		i = king[0];
+		j = king[1];
+
+		while (i > 0 && j < 7) {
+			i--;
+			j++;
+			if (note.contains(i * 10 + j)) {
+				List<Integer> r = new ArrayList<>();
+				r.add(i);
+				r.add(j);
+				res.add(r);
+				break;
+			}
+		}
+		i = king[0];
+		j = king[1];
+
+		while (j < 7) {
+			j++;
+			if (note.contains(i * 10 + j)) {
+				List<Integer> r = new ArrayList<>();
+				r.add(i);
+				r.add(j);
+				res.add(r);
+				break;
+			}
+		}
+		i = king[0];
+		j = king[1];
+
+		while (i < 7 && j < 7) {
+			i++;
+			j++;
+			if (note.contains(i * 10 + j)) {
+				List<Integer> r = new ArrayList<>();
+				r.add(i);
+				r.add(j);
+				res.add(r);
+				break;
+			}
+		}
+		i = king[0];
+		j = king[1];
+
+		while (i < 7) {
+			i++;
+			if (note.contains(i * 10 + j)) {
+				List<Integer> r = new ArrayList<>();
+				r.add(i);
+				r.add(j);
+				res.add(r);
+				break;
+			}
+		}
+		i = king[0];
+		j = king[1];
+
+		while (i < 7 && j > 0) {
+			i++;
+			j--;
+			if (note.contains(i * 10 + j)) {
+				List<Integer> r = new ArrayList<>();
+				r.add(i);
+				r.add(j);
+				res.add(r);
+				break;
+			}
+		}
+		i = king[0];
+		j = king[1];
+
+		while (j > 0) {
+			j--;
+			if (note.contains(i * 10 + j)) {
+				List<Integer> r = new ArrayList<>();
+				r.add(i);
+				r.add(j);
+				res.add(r);
+				break;
+			}
+		}
+		i = king[0];
+		j = king[1];
+
+		while (i > 0 && j > 0) {
+			i--;
+			j--;
+			if (note.contains(i * 10 + j)) {
+				List<Integer> r = new ArrayList<>();
+				r.add(i);
+				r.add(j);
+				res.add(r);
+				break;
+			}
+		}
+
+		return res;
+	}
+
+	// 2596
+	public boolean checkValidGrid(int[][] grid) {
+		if (grid[0][0] != 0) {
+			return false;
+		}
+		int len = grid.length, sum = len * len - 1;
+		int i = 0, j = 0, n = 0;
+		while (n < sum) {
+			n++;
+			if (i - 2 >= 0 && j - 1 >= 0 && grid[i - 2][j - 1] == n) {
+				i = i - 2;
+				j = j - 1;
+				continue;
+			}
+			if (i - 1 >= 0 && j - 2 >= 0 && grid[i - 1][j - 2] == n) {
+				i = i - 1;
+				j = j - 2;
+				continue;
+			}
+			if (i + 1 < len && j - 2 >= 0 && grid[i + 1][j - 2] == n) {
+				i = i + 1;
+				j = j - 2;
+				continue;
+			}
+			if (i + 2 < len && j - 1 >= 0 && grid[i + 2][j - 1] == n) {
+				i = i + 2;
+				j = j - 1;
+				continue;
+			}
+			if (i + 2 < len && j + 1 < len && grid[i + 2][j + 1] == n) {
+				i = i + 2;
+				j = j + 1;
+				continue;
+			}
+			if (i + 1 < len && j + 2 < len && grid[i + 1][j + 2] == n) {
+				i = i + 1;
+				j = j + 2;
+				continue;
+			}
+			if (i - 1 >= 0 && j + 2 < len && grid[i - 1][j + 2] == n) {
+				i = i - 1;
+				j = j + 2;
+				continue;
+			}
+			if (i - 2 >= 0 && j + 1 < len && grid[i - 2][j + 1] == n) {
+				i = i - 2;
+				j = j + 1;
+				continue;
+			}
+			return false;
+		}
+		return true;
+	}
+
+	// 1462
+	public List<Boolean> checkIfPrerequisite(int numCourses, int[][] prerequisites, int[][] queries) {
+		HashSet[] note = new HashSet[numCourses];
+		for (int i = 0; i < prerequisites.length; i++) {
+			if (note[prerequisites[i][0]] == null) {
+				note[prerequisites[i][0]] = new HashSet<>();
+			}
+			note[i].add(prerequisites[i][1]);
+		}
+
+		for (int i = 0; i < note.length; i++) {
+			HashSet t = new HashSet<>();
+			for (Object n : note[i]) {
+//				t.addAll(note[n]) = note[n];
+			}
+		}
+
+		return null;
+	}
+
+	// 135
+	public int candy(int[] ratings) {
+		int t = 1, sum = 1;
+		for (int i = 1; i < ratings.length; i++) {
+			if (ratings[i] > ratings[i - 1]) {
+				t++;
+				sum += t;
+			} else if (ratings[i] == ratings[i - 1]) {
+				if (t > 1) {
+					t--;
+				}
+				sum += t;
+			} else {
+				if (t > 1) {
+					t--;
+					sum += t;
+				} else {
+				}
+			}
+		}
+		return sum;
+	}
+
+	// 2594
+	public long repairCars(int[] ranks, int cars) {
+		PriorityQueue<long[]> queue = new PriorityQueue<>((o1, o2) -> {
+			if (o1[0] - o2[0] > 0) {
+				return 1;
+			} else {
+				return -1;
+			}
+		});
+		for (int i = 0; i < ranks.length; i++) {
+			queue.add(new long[] { ranks[i], ranks[i], 0, 1 });
+		}
+		for (int i = 0; i < cars; i++) {
+			long[] t = queue.poll();
+			t[2] = t[0];
+			t[3]++;
+			t[0] = t[1] * t[3] * t[3];
+			queue.offer(t);
+		}
+		long res = 0;
+		for (long[] is : queue) {
+			res = Math.max(res, is[2]);
+		}
+
+		return res;
+
+	}
+
+	// 2240
+	public long waysToBuyPensPencils(int total, int cost1, int cost2) {
+		long res = 0;
+		for (int i = 0; i <= total; i += cost1) {
+			int t = total - i;
+			res += t / cost2 + 1;
+		}
+		return res;
+	}
+
+	// 1448
+	public int goodNodes(TreeNode root) {
+		return 1 + f1448(root.left, root.val) + f1448(root.right, root.val);
+	}
+
+	private int f1448(TreeNode node, int n) {
+		if (node == null) {
+			return 0;
+		}
+		int t = Math.max(n, node.val);
+		if (node.val >= n) {
+			return 1 + f1448(node.left, t) + f1448(node.right, t);
+		} else {
+			return f1448(node.left, t) + f1448(node.right, t);
+		}
+	}
+
+	// 394
+	public String decodeString(String s) {
+		i394 = 0;
+		return f394(s, 0);
+	}
+
+	private int i394 = 0;
+
+	private String f394(String s, int n) {
+		StringBuffer sb = new StringBuffer();
+		int t = 0;
+		while (i394 < s.length()) {
+			char c = s.charAt(i394);
+			if (c <= 'z' && c >= 'a') {
+				sb.append(c);
+			} else if (c <= '9' && c >= '0') {
+				t = t * 10 + c - '0';
+			} else if (c == ']') {
+				String tmp = sb.toString();
+				for (int j = 1; j < n; j++) {
+					sb.append(tmp);
+				}
+				return sb.toString();
+			} else {
+				i394++;
+				sb.append(f394(s, t));
+			}
+			i394++;
+		}
+		System.out.println(sb.toString());
+		return sb.toString();
+	}
+
+	// 1267
+	public int countServers(int[][] grid) {
+		int m = grid.length;
+		int n = grid[0].length;
+		int[] row = new int[m];
+		int[] col = new int[n];
+		for (int i = 0; i < m; i++) {
+			for (int j = 0; j < n; j++) {
+				if (grid[i][j] == 1) {
+					row[i]++;
+					col[j]++;
+				}
+			}
+		}
+		int res = 0;
+		for (int i = 0; i < m; i++) {
+			for (int j = 0; j < n; j++) {
+				if (grid[i][j] == 1 && (row[i] > 1 || col[i] > 1)) {
+					res++;
+				}
+			}
+		}
+		return res;
+	}
+
+	// 1782
+	public int[] countPairs(int n, int[][] edges, int[] queries) {
+		int[] note = new int[n + 1];
+		Map<Integer, Integer> map = new HashMap<>();
+		Set<Integer> nodes = new HashSet<>();
+
+		for (int i = 0; i < edges.length; i++) {
+			note[edges[i][0]]++;
+			note[edges[i][1]]++;
+			int k = edges[i][0] * 10000 + edges[i][1];
+			map.put(k, map.getOrDefault(k, 0) + 1);
+			nodes.add(edges[i][0]);
+			nodes.add(edges[i][1]);
+		}
+//		System.out.println(Arrays.toString(note));
+//		System.out.println(map);
+//		System.out.println("============");
+		int[] sum = new int[edges.length + 1];
+		Object[] nds = nodes.toArray();
+//		System.out.println(Arrays.toString(nds));
+		for (int i = 0; i < nds.length - 1; i++) {
+			for (int j = i + 1; j < nds.length; j++) {
+				int s1 = (int) nds[i] * 10000 + (int) nds[j];
+				int s2 = (int) nds[j] * 10000 + (int) nds[i];
+				int t = note[(int) nds[i]] + note[(int) nds[j]] - map.getOrDefault(s1, 0) - map.getOrDefault(s2, 0);
+				if (t > 0) {
+					sum[t - 1]++;
+				}
+			}
+		}
+//		System.out.println(Arrays.toString(sum));
+		for (int i = sum.length - 2; i >= 0; i--) {
+			sum[i] += sum[i + 1];
+		}
+		for (int i = 0; i < queries.length; i++) {
+			queries[i] = sum[queries[i]];
+		}
+		return queries;
+	}
+
+	// 849
+	public int maxDistToClosest(int[] seats) {
+		int m = 0, t = 0;
+		for (int i = 0; i < seats.length; i++) {
+			if (seats[i] == 0) {
+				t++;
+			} else {
+				m = Math.max(t, m);
+				t = 0;
+			}
+		}
+		int r = m / 2;
+		if (m % 2 == 1) {
+			r++;
+		}
+		int i = 0;
+		while (seats[i] == 0) {
+			i++;
+		}
+		r = Math.max(r, i);
+		i = seats.length - 1;
+		while (seats[i] == 0) {
+			i--;
+		}
+		r = Math.max(r, seats.length - i - 1);
+		return 0;
+	}
+
+	// 2337
+	public boolean canChange(String start, String target) {
+		int len = start.length();
+		int r = 0, l = 0;
+		int startLeftL = 0, startRightR = 0;
+		int targetLeftL = 0, targetRightR = 0;
+		for (int i = 0; i < len; i++) {
+			int t = len - i - 1;
+			if (start.charAt(i) == 'L') {
+				startLeftL++;
+			}
+			if (start.charAt(t) == 'R') {
+				startRightR++;
+			}
+			if (target.charAt(i) == 'L') {
+				targetLeftL++;
+			}
+			if (target.charAt(t) == 'R') {
+				targetRightR++;
+			}
+			if (start.charAt(i) == 'R') {
+				r++;
+			}
+			if (target.charAt(i) == 'R') {
+				if (r < 1 || startLeftL != targetLeftL) {
+					return false;
+				}
+				r--;
+			}
+			if (start.charAt(t) == 'L') {
+				l++;
+			}
+			if (target.charAt(t) == 'L') {
+				if (l < 1 || startRightR != targetRightR) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	// 面试 08.11
+	public int waysToChange(int n) {
+		int[] note = new int[26];
+		note[1] = 1;
+		for (int i = 2; i < note.length; i++) {
+			int s = 0;
+			if (i - 1 > 0) {
+				s += note[i - 1];
+			}
+			if (i - 5 > 0) {
+				s += note[i - 5];
+			}
+			if (i - 10 > 0) {
+				s += note[i - 10];
+			}
+			if (i - 25 > 0) {
+				s += note[i - 25];
+			}
+			note[i] = s;
+		}
+		System.out.println(Arrays.toString(note));
+		return 0;
+	}
+
+	// 833
+	public String findReplaceString(String s, int[] indices, String[] sources, String[] targets) {
+		int offset = 0;
+		Object[][] data = new Object[indices.length][3];
+		for (int i = 0; i < data.length; i++) {
+			data[i][0] = indices[i];
+			data[i][1] = sources[i];
+			data[i][2] = targets[i];
+
+		}
+
+		Arrays.sort(data, (o1, o2) -> {
+			return (int) o1[0] - (int) o2[0];
+		});
+
+		for (int i = 0; i < data.length; i++) {
+			int index = (int) data[i][0] + offset;
+			if (s.startsWith((String) data[i][1], index)) {
+				s = s.substring(0, index) + (String) data[i][2] + s.substring(index + ((String) data[i][1]).length());
+				offset = offset + ((String) data[i][2]).length() - ((String) data[i][1]).length();
+			}
+		}
+
+		return s;
+	}
+
+	// 1289
+	public int minFallingPathSum(int[][] grid) {
+//		// s1 为当前行和的最小值，s2 为当前行和的次小值
+//		int s1 = 0, s2 = 0;
+//		// i1 为 m1 的位置，i2 为 m2 的位置
+//		int i1 = -1, i2 = -1;
+//		
+//		for (int i = 0; i < grid.length; i++) {
+//			int m1 = -100, m2 = -100;
+//			int t1 = -1, t2 = -1;
+//			for (int j = 0; j < grid[i].length; j++) {
+//				if (grid[i][j] <= m1) {
+//					m2 = m1;
+//					t2 = t1;
+//					m1 = grid[i][j];
+//					t1 = j;
+//				} else if (grid[i][j] <) {
+//					
+//				}
+//			}
+//		}
+//		
+//		
+//		
+		return 0;
+	}
+
+	// 1366
+	public String rankTeams(String[] votes) {
+//		int len = votes[0].length();
+//		int[][] note = new int[len][len];
+//		for (int i = 0; i < votes.length; i++) {
+//			for (int j = 0; j < len; j++) {
+//				note[j][votes[i].charAt(j) - 'A']++;
+//			}
+//		}
+
+		// 自定义排序
+		return null;
+	}
+
+	// 1749
+	public int maxAbsoluteSum(int[] nums) {
+		int max = 0, min = 0;
+		int maxsum = 0, minsum = 0;
+		for (int i = 0; i < nums.length; i++) {
+			maxsum += nums[i];
+			minsum += nums[i];
+			if (maxsum < 0) {
+				maxsum = 0;
+			}
+			if (minsum > 0) {
+				minsum = 0;
+			}
+			max = Math.max(max, maxsum);
+			min = Math.min(min, minsum);
+		}
+		min *= -1;
+		return max > min ? max : min;
+	}
+
+	// 722 unfinished
+	public List<String> removeComments(String[] source) {
+		List<String> res = new ArrayList<>();
+		boolean flag = false;
+		for (int i = 0; i < source.length; i++) {
+			if (flag) {
+				// 在注释快内
+				int t = source[i].indexOf("*/");
+				if (t > -1) {
+					source[i] = source[i].substring(t);
+					flag = false;
+					if (source[i].length() > 0) {
+						i--;
+					}
+				} else {
+					continue;
+				}
+			} else {
+				// 不在注释块内
+				int a = source[i].indexOf("/*");
+				int b = source[i].indexOf("//");
+				if (a > -1 && b > -1) {
+					if (b < a) {
+						source[i].substring(0, b);
+						if (source[i].length() > 0) {
+							res.add(source[i]);
+						}
+					} else {
+						source[i].substring(0, a);
+						if (source[i].length() > 0) {
+							res.add(source[i]);
+						}
+					}
+				} else if (a > -1) {
+					source[i].substring(0, a);
+					if (source[i].length() > 0) {
+						res.add(source[i]);
+					}
+				} else if (b > -1) {
+
+				}
+			}
+		}
+		return null;
+	}
+
+	// 822
+	public int flipgame(int[] fronts, int[] backs) {
+		Set<Integer> note = new HashSet<>();
+		for (int i = 0; i < fronts.length; i++) {
+			if (fronts[i] == backs[i]) {
+				note.add(fronts[i]);
+			}
+		}
+		int res = Integer.MAX_VALUE;
+		for (int i = 0; i < fronts.length; i++) {
+			if (!note.contains(fronts[i])) {
+				res = Math.min(res, fronts[i]);
+			}
+			if (!note.contains(backs[i])) {
+				res = Math.min(res, backs[i]);
+			}
+		}
+
+		return res == Integer.MAX_VALUE ? 0 : res;
+	}
+
+	// 2569
+	public long[] handleQuery(int[] nums1, int[] nums2, int[][] queries) {
+		long sum = 0;
+		for (int i = 0; i < nums2.length; i++) {
+			sum += nums2[i];
+		}
+
+		List<Long> list = new ArrayList<>();
+		for (int i = 0; i < queries.length; i++) {
+			System.out.println(Arrays.toString(nums1));
+			if (queries[i][0] == 1) {
+				for (int j = queries[i][1]; j <= queries[i][2]; j++) {
+					nums1[j] ^= 1;
+				}
+			} else if (queries[i][0] == 2) {
+				for (int j = 0; j < nums2.length; j++) {
+					int t = nums2[j];
+					nums2[j] = nums2[j] + nums1[j] * queries[i][1];
+					sum = sum - t + nums2[j];
+				}
+			} else {
+				list.add(sum);
+			}
+		}
+
+		long[] res = new long[list.size()];
+		for (int i = 0; i < res.length; i++) {
+			res[i] = list.get(i);
+		}
+		return res;
+	}
+
+	// 1499
+	public int findMaxValueOfEquation(int[][] points, int k) {
+		int res = Integer.MIN_VALUE;
+		int i = 0, j = 1;
+		while (j < points.length) {
+			if (i == j) {
+				j++;
+				continue;
+			}
+			int t = points[j][0] - points[i][0];
+			if (t <= k) {
+				res = Math.max(res, points[j][1] + points[i][1] + t);
+				if (points[j][1] - points[j][0] > points[i][1] - points[i][0]) {
+					i++;
+					continue;
+				}
+				j++;
+			} else {
+				i++;
+			}
+		}
+		j = j - 1;
+		while (i < j) {
+			int t = points[j][0] - points[i][0];
+			if (t <= k) {
+				res = Math.max(res, points[j][1] + points[i][1] + t);
+			}
+			i++;
+		}
+		return res;
+	}
+
+	// 1253
+	public List<List<Integer>> reconstructMatrix(int upper, int lower, int[] colsum) {
+		List<Integer> up = new ArrayList<>();
+		List<Integer> low = new ArrayList<>();
+
+		boolean flag = false;
+
+		for (int i = 0; i < colsum.length; i++) {
+			if (colsum[i] == 2) {
+				if (upper == 0 || lower == 0) {
+					flag = true;
+					break;
+				}
+				up.add(1);
+				low.add(1);
+				upper--;
+				lower--;
+			} else if (colsum[i] == 0) {
+				up.add(0);
+				low.add(0);
+			} else {
+				if (upper == 0 && lower == 0) {
+					flag = true;
+					break;
+				}
+				if (upper > lower) {
+					up.add(1);
+					low.add(0);
+					upper--;
+				} else {
+					up.add(0);
+					low.add(1);
+					lower--;
+				}
+			}
+		}
+
+		List<List<Integer>> res = new ArrayList<>();
+
+		if (flag || upper > 0 || lower > 0) {
+			return res;
+		}
+
+		res.add(up);
+		res.add(low);
+		return res;
+	}
+
+	public int pivotInteger(int n) {
+		int[] sum = new int[n + 1];
+		for (int i = 1; i < sum.length; i++) {
+			sum[i] = sum[i - 1] + i;
+		}
+		int l = 1, r = n;
+		while (l <= r) {
+
+			int i = (l + r) / 2;
+
+			System.out.println(l + "," + r + "," + i);
+			int a = sum[i];
+			int b = sum[n] - sum[i - 1];
+			System.out.println("=" + a + "," + b);
+			if (a == b) {
+				return i;
+			} else if (a > b) {
+				r = i - 1;
+			} else {
+				l = i + 1;
+			}
+		}
+		return -1;
+	}
+
+	// 1401
+	public boolean checkOverlap(int radius, int xCenter, int yCenter, int x1, int y1, int x2, int y2) {
+		if (xCenter + radius < x1) {
+			return false;
+		}
+		if (xCenter - radius > x2) {
+			return false;
+		}
+		if (yCenter + radius < y2) {
+			return false;
+		}
+		if (yCenter - radius > y2) {
+			return false;
+		}
+		return true;
+	}
+
+	// 2289
+	public int totalSteps(int[] nums) {
+		int res = 0;
+		int max = nums[0];
+		for (int i = 1; i < nums.length; i++) {
+			if (nums[i] < max) {
+				int t = 1;
+				while (i < nums.length && nums[i] < max) {
+					if (nums[i] >= nums[i - 1]) {
+						t++;
+					}
+
+					i++;
+				}
+				i--;
+				res = Math.max(res, t);
+			} else {
+				max = nums[i];
+			}
+		}
+		return res;
+	}
+
+	// 1375
+	public int numTimesAllBlue(int[] flips) {
+		int res = 0;
+		int max = -1;
+		for (int i = 0; i < flips.length; i++) {
+			max = Math.max(max, flips[i]);
+			if (max == i + 1) {
+				res++;
+			}
+		}
+		return res;
+	}
+
+	// 2611
+	public int miceAndCheese(int[] reward1, int[] reward2, int k) {
+		int len = reward1.length;
+		int[][] note = new int[len][2];
+		for (int i = 0; i < len; i++) {
+			note[i][0] = reward1[i];
+			note[i][1] = reward2[i];
+		}
+		Arrays.sort(note, (i, j) -> {
+			return (j[0] - j[1]) - (i[0] - i[1]);
+		});
+		for (int i = 0; i < note.length; i++) {
+			System.out.println(Arrays.toString(note[i]));
+		}
+
+		int res = 0;
+		for (int i = 0; i < k; i++) {
+			res += note[i][0];
+		}
+		for (int i = k; i < note.length; i++) {
+			res += note[i][1];
+		}
+		return res;
+	}
+
+	// 1110
+	public List<TreeNode> delNodes(TreeNode root, int[] to_delete) {
+		Set<Integer> note = new HashSet<>();
+		for (int i : to_delete) {
+			note.add(i);
+		}
+		List<TreeNode> res = new ArrayList<>();
+		f1110(root, res, note, false);
+		return res;
+	}
+
+	boolean f1110(TreeNode root, List<TreeNode> ans, Set<Integer> note, boolean parentExists) {
+		boolean del = false;
+		if (root == null) {
+			return del;
+		}
+		del = note.contains(root.val);
+		if (f1110(root.left, ans, note, !del)) {
+			root.left = null;
+		}
+		if (f1110(root.right, ans, note, !del)) {
+			root.right = null;
+		}
+		if (!del && !parentExists) {
+			ans.add(root);
+		}
+		return del;
+	}
+
+	// 1091
+	public int shortestPathBinaryMatrix(int[][] grid) {
+		if (grid[0][0] == 1 || grid[grid.length - 1][grid.length - 1] == 1) {
+			return -1;
+		}
+		List<Integer> note = new ArrayList<>();
+		note.add(0);
+		grid[0][0] = -1;
+		int res = f1091(grid, note, 0);
+		return res;
+	}
+
+	public int f1091(int[][] grid, List<Integer> note, int index) {
+		List<Integer> nn = new ArrayList<>();
+		for (Integer t : note) {
+			int i = t / 1000;
+			int j = t % 1000;
+
+			if (i > 0 && j > 0 && grid[i - 1][j - 1] == 0) {
+				nn.add((i - 1) * 1000 + (j - 1));
+				grid[i - 1][j - 1] = -1;
+			}
+			if (i > 0 && grid[i - 1][j] == 0) {
+				nn.add((i - 1) * 1000 + (j));
+				grid[i - 1][j] = -1;
+			}
+			if (i > 0 && j < grid.length - 1 && grid[i - 1][j + 1] == 0) {
+				nn.add((i - 1) * 1000 + (j + 1));
+				grid[i - 1][j + 1] = -1;
+			}
+			if (j < grid.length - 1 && grid[i][j + 1] == 0) {
+				nn.add((i) * 1000 + (j + 1));
+				grid[i][j + 1] = -1;
+			}
+			if (i < grid.length - 1 && j < grid.length - 1 && grid[i + 1][j + 1] == 0) {
+				nn.add((i + 1) * 1000 + (j + 1));
+				grid[i + 1][j + 1] = -1;
+			}
+			if (i < grid.length - 1 && grid[i + 1][j] == 0) {
+				nn.add((i + 1) * 1000 + (j));
+				grid[i + 1][j] = -1;
+			}
+			if (i < grid.length - 1 && j > 0 && grid[i + 1][j - 1] == 0) {
+				nn.add((i + 1) * 1000 + (j - 1));
+				grid[i + 1][j - 1] = -1;
+			}
+			if (j > 0 && grid[i + 1][j - 1] == 0) {
+				nn.add((i) * 1000 + (j - 1));
+				grid[i][j - 1] = -1;
+			}
+		}
+		if (nn.size() == 0) {
+			return -1;
+		}
+		if (nn.contains((grid.length - 1) * 1000 + grid.length - 1)) {
+			return index;
+		} else {
+			return f1091(grid, nn, index + 1);
+		}
+	}
+
+	// 2451
+	public String oddString(String[] words) {
+		int len = words[0].length();
+		StringBuffer base = new StringBuffer();
+		for (int i = 1; i < len; i++) {
+			base.append(words[0].charAt(i) - words[0].charAt(i - 1));
+			base.append(",");
+		}
+		boolean isSecondDiff = false;
+		StringBuffer temp1 = new StringBuffer();
+		for (int i = 1; i < len; i++) {
+			temp1.append(words[1].charAt(i) - words[1].charAt(i - 1));
+			temp1.append(",");
+		}
+		if (!base.toString().equals(temp1.toString())) {
+			isSecondDiff = true;
+		}
+
+		boolean isThirdDiff = false;
+		StringBuffer temp2 = new StringBuffer();
+		for (int i = 1; i < len; i++) {
+			temp2.append(words[2].charAt(i) - words[2].charAt(i - 1));
+			temp2.append(",");
+		}
+		System.out.println(base + "," + temp2);
+		if (!base.toString().equals(temp2.toString())) {
+			isThirdDiff = true;
+		}
+
+		if (isSecondDiff && isThirdDiff) {
+			return words[0];
+		} else if (isSecondDiff) {
+			return words[1];
+		} else if (isThirdDiff) {
+			return words[2];
+		}
+
+		for (int i = 3; i < words.length; i++) {
+			StringBuffer temp = new StringBuffer();
+			for (int j = 1; j < len; j++) {
+				temp.append(words[i].charAt(j) - words[i].charAt(j - 1));
+				temp.append(",");
+			}
+			if (!base.toString().equals(temp.toString())) {
+				return words[i];
+			}
+		}
+		return words[0];
+	}
+
+	// 1377
+	public double frogPosition(int n, int[][] edges, int t, int target) {
+		Map<Integer, List<Integer>> note = new HashMap<>();
+		for (int i = 0; i < edges.length; i++) {
+			if (note.containsKey(edges[i][0])) {
+				note.get(edges[i][0]).add(edges[i][1]);
+			} else {
+				List<Integer> list = new ArrayList<>();
+				list.add(edges[i][1]);
+				note.put(edges[i][0], list);
+			}
+			if (note.containsKey(edges[i][1])) {
+				note.get(edges[i][1]).add(edges[i][0]);
+			} else {
+				List<Integer> list = new ArrayList<>();
+				list.add(edges[i][0]);
+				note.put(edges[i][1], list);
+			}
+		}
+		System.out.println(note);
+		double res = 1;
+		List<Integer> positions = new ArrayList<>();
+		Set<Integer> history = new HashSet<>();
+		history.add(1);
+		positions.add(1);
+		int time = 1;
+		while (time < t) {
+			if (positions.isEmpty()) {
+				return 0;
+			}
+			int count = 0;
+			List<Integer> newPositions = new ArrayList<>();
+			for (int i = 0; i < positions.size(); i++) {
+				List<Integer> temp = note.get(positions.get(i));
+				System.out.println("===" + temp);
+				for (int j = 0; j < temp.size(); j++) {
+					if (history.contains(temp.get(j))) {
+						continue;
+					} else {
+						count++;
+						newPositions.add(temp.get(j));
+						history.add(temp.get(j));
+					}
+				}
+			}
+			res = res / (count * 1.0);
+			positions = newPositions;
+			System.out.println(positions);
+			System.out.println("res : " + res);
+		}
+		if (positions.contains(target)) {
+			return res;
+		} else {
+			return 0;
+		}
+	}
+
+	// 1080
+	public TreeNode sufficientSubset(TreeNode root, int limit) {
+
+		return null;
+	}
+
+	private int f1080(TreeNode node) {
+		if (node == null) {
+			return 0;
+		} else {
+			return f1080(node.left) + f1080(node.right);
+		}
+	}
+
+	// 1079
+	public int numTilePossibilities(String tiles) {
+		String t2 = new StringBuffer(tiles).reverse().toString();
+		System.out.println(t2);
+		Set<String> note = new HashSet<>();
+		for (int i = 0; i < tiles.length(); i++) {
+			for (int j = i + 1; j <= tiles.length(); j++) {
+				System.out.println(tiles.substring(i, j) + "," + t2.substring(i, j));
+				note.add(tiles.substring(i, j));
+				note.add(t2.substring(i, j));
+			}
+		}
+//		System.out.println(note);
+		return note.size();
+	}
+
+	// 1072
+	public int maxEqualRowsAfterFlips(int[][] matrix) {
+		int len = matrix.length;
+		int[] note = new int[len];
+		boolean[] a = new boolean[len];
+		boolean[] b = new boolean[len];
+		for (int i = 0; i < len; i++) {
+			note[i] = matrix[i][0];
+		}
+		for (int i = 1; i < matrix[0].length; i++) {
+			for (int j = 0; j < len; j++) {
+				if (matrix[j][i] == note[j]) {
+					b[j] = true;
+				} else {
+					a[j] = true;
+				}
+			}
+		}
+		int r1 = 0, r2 = 0;
+		for (int i = 0; i < len; i++) {
+			if (!a[i]) {
+				r1++;
+			}
+			if (!b[i]) {
+				r2++;
+			}
+		}
+		return Math.max(r1, r2);
+
+	}
+
+	// 1015
+	public int smallestRepunitDivByK(int k) {
+		int len = (Long.MAX_VALUE + "").toString().length();
+		System.out.println(len);
+		long i = 1;
+		int l = 1;
+		while (l < len) {
+			System.out.println("l : " + l + " , " + (i % k));
+			if (i % k == 0) {
+				return l;
+			}
+			i = i * 10 + 1;
+			l++;
+		}
+		return -1;
+	}
+
+	// 2442
+	public int countDistinctIntegers(int[] nums) {
+		boolean[] note = new boolean[1000001];
+		int res = 0;
+		for (int i = 0; i < nums.length; i++) {
+			if (!note[nums[i]]) {
+				res++;
+				note[nums[i]] = true;
+			}
+			int t = f2442(nums[i]);
+			if (t != nums[i] && !note[t]) {
+				res++;
+				note[t] = true;
+			}
+		}
+		return res;
+	}
+
+	private int f2442(int n) {
+		int t = 0;
+		while (n > 0) {
+			t = t * 10 + n % 10;
+			n = n / 10;
+		}
+		return t;
+	}
+
+	// 2441
+	public int findMaxK(int[] nums) {
+//		int[] note = new int[2001];
+//		for (int i = 0; i < nums.length; i++) {
+//			note[nums[i] + 1000] = 1;
+//		}
+//		for (int i = 2000; i >= 0; i--) {
+//			if (note[i] == 1 && note[2000 - i] == 1) {
+//				return i - 1000;
+//			}
+//		}
+//		return -1;
+
+//		Arrays.sort(nums);
+//		int i = 0, j = nums.length - 1;
+//		while (nums[j] > 0 && j > i) {
+//			int t = nums[i] * -1;
+//			if (nums[j] == t) {
+//				return nums[j];
+//			} else if (nums[j] > t) {
+//				j--;
+//			} else {
+//				i++;
+//			}
+//		}
+//		return -1;
+
+//		Set<Integer> note = new HashSet<>();
+//		int res = -1;
+//		for (int i = 0; i < nums.length; i++) {
+//			if (nums[i] < 0) {
+//				int t = nums[i] * -1;
+//				if (note.contains(t)) {
+//					res = Math.max(res, t);
+//				}
+//				note.add(nums[i]);
+//			} else if (nums[i] > 0) {
+//				int t = nums[i] * -1;
+//				if (note.contains(t)) {
+//					res = Math.max(res, nums[i]);
+//				}
+//				note.add(nums[i]);
+//			}
+//		}
+//		return res;
+
+		boolean[] note = new boolean[2001];
+		int res = 0;
+		for (int i = 0; i < nums.length; i++) {
+			note[nums[i] + 1000] = true;
+			if (note[1000 - nums[i]]) {
+				res = Math.max(res, Math.abs(nums[i]));
+			}
+		}
+		return res == 0 ? -1 : res;
+	}
+
+	// 1419
+	public int minNumberOfFrogs(String croakOfFrogs) {
+		int[] note = new int[4];
+		int res = 0, n = 0;
+
+		for (int i = 0; i < croakOfFrogs.length(); i++) {
+			char c = croakOfFrogs.charAt(i);
+			if (c == 'c') {
+				note[0]++;
+				n++;
+				res = Math.max(n, res);
+			} else if (c == 'r') {
+				if (note[0] > 0) {
+					note[0]--;
+					note[1]++;
+				} else {
+					return -1;
+				}
+			} else if (c == 'o') {
+				if (note[1] > 0) {
+					note[1]--;
+					note[2]++;
+				} else {
+					return -1;
+				}
+			} else if (c == 'a') {
+				if (note[2] > 0) {
+					note[2]--;
+					note[3]++;
+				} else {
+					return -1;
+				}
+			} else {
+				if (note[3] > 0) {
+					note[3]--;
+					n--;
+				} else {
+					return -1;
+				}
+			}
+		}
+		if (note[0] > 0 || note[1] > 0 || note[2] > 0 || note[3] > 0) {
+			return -1;
+		}
+		return res;
+	}
+
+	// 1048
+	public int longestStrChain(String[] words) {
+		Arrays.sort(words, (word1, word2) -> {
+			return word1.length() - word2.length();
+		});
+		int[] note = new int[words.length];
+		Arrays.fill(note, 1);
+		for (int i = 1; i < words.length; i++) {
+			for (int j = i - 1; j >= 0; j--) {
+				if (words[i].length() - words[j].length() > 1) {
+					break;
+				} else if (words[i].length() - words[j].length() == 1 && f1048(words[j], words[i])) {
+					note[i] = Math.max(note[j] + 1, note[i]);
+				}
+			}
+		}
+		int res = note[0];
+		for (int i : note) {
+			res = Math.max(i, res);
+		}
+		return res;
+	}
+
+	private boolean f1048(String word1, String word2) {
+		int i = 0, j = word2.length() - 1;
+		while (i < word1.length() && word1.charAt(i) == word2.charAt(i)) {
+			i++;
+		}
+		while (j > 0 && j > i && word1.charAt(j - 1) == word2.charAt(j)) {
+			j--;
+		}
+		if (i == j) {
+			return true;
+		}
+		return false;
+	};
+
+	// 1031
+	public int maxSumTwoNoOverlap(int[] nums, int firstLen, int secondLen) {
+		int[] sum = new int[nums.length + 1];
+		for (int i = 1; i < sum.length; i++) {
+			sum[i] = sum[i - 1] + nums[i - 1];
+		}
+
+		// 第一段终点dp
+		int[] f2 = new int[sum.length];
+		for (int i = 0; i < sum.length - firstLen; i++) {
+			int t = sum[firstLen + i] - sum[i];
+			f2[firstLen + i] = Math.max(f2[firstLen + i - 1], t);
+		}
+
+		// 第一段起点dp
+		int[] f1 = new int[sum.length];
+		for (int i = sum.length - 1; i >= firstLen; i--) {
+			int t = sum[i] - sum[i - firstLen];
+			f1[i - firstLen] = Math.max(f1[i - firstLen + 1], t);
+		}
+
+		// 第二段终点dp
+		int[] s2 = new int[sum.length];
+		for (int i = 0; i < sum.length - secondLen; i++) {
+			int t = sum[secondLen + i] - sum[i];
+			s2[secondLen + i] = Math.max(s2[secondLen + i - 1], t);
+		}
+
+		// 第二段起点dp
+		int[] s1 = new int[sum.length];
+		for (int i = sum.length - 1; i >= secondLen; i--) {
+			int t = sum[i] - sum[i - secondLen];
+			s1[i - secondLen] = Math.max(s1[i - secondLen + 1], t);
+		}
+
+		int res = 0;
+		for (int i = 0; i < sum.length - firstLen; i++) {
+			res = Math.max(res, f2[firstLen + i] + s1[firstLen + i]);
+		}
+
+		for (int i = 0; i < sum.length - secondLen; i++) {
+			res = Math.max(res, s2[secondLen + i] + f1[secondLen + i]);
+		}
+
+		return res;
+	}
+
+	// 1163
+	public String lastSubstring(String s) {
+		int t = 0;
+		List<Integer> note = new ArrayList<>();
+		for (int i = 0; i < s.length(); i++) {
+			if (s.charAt(i) == t && s.charAt(i - 1) != s.charAt(i)) {
+				note.add(i);
+			} else if (s.charAt(i) > t) {
+				t = s.charAt(i);
+				note.clear();
+				note.add(i);
+			}
+		}
+
+		int n = 1;
+		while (note.size() > 1) {
+			List<Integer> list = new ArrayList<>();
+			t = 0;
+			for (int i = 0; i < note.size(); i++) {
+				int j = note.get(i) + n;
+				if (j >= s.length()) {
+					continue;
+				}
+				if (s.charAt(j) == t) {
+					list.add(note.get(i));
+				} else if (s.charAt(j) > t) {
+					t = s.charAt(j);
+					list.clear();
+					list.add(note.get(i));
+				}
+			}
+			note = list;
+			n++;
+		}
+
+		return s.substring(note.get(0));
+	}
+
+	// 1105
+	public int minHeightShelves(int[][] books, int shelfWidth) {
+		return 0;
+	}
+
+	// 904
+	public int totalFruit(int[] fruits) {
+		int i = 0, j = 0, s = 0, res = 0;
+		Map<Integer, Integer> note = new HashMap<>();
+		while (j < fruits.length) {
+			if (note.size() < 2 || note.containsKey(fruits[j])) {
+				note.put(fruits[j], note.getOrDefault(fruits[j], 0) + 1);
+				s++;
+				j++;
+				res = Math.max(s, res);
+			} else {
+				Integer t = note.get(fruits[i]);
+				t--;
+				if (t == 0) {
+					note.remove(fruits[i]);
+				} else {
+					note.put(fruits[i], t);
+				}
+				s--;
+				i++;
+			}
+		}
+		return res;
+	}
+
+	// 1187
+	public int makeArrayIncreasing(int[] arr1, int[] arr2) {
+//		Arrays.sort(arr2);
+//		int t = arr1[0];
+//		for (int i = 1; i < arr1.length; i++) {
+//			
+//		}
+		int res = 0;
+		return res;
+	}
+
+	// 1043
+	public int maxSumAfterPartitioning(int[] arr, int k) {
+		int[] dp = new int[arr.length];
+		int t = 0;
+		for (int i = 0; i < k; i++) {
+			t = Math.max(arr[i], t);
+			dp[i] = (i + 1) * t;
+		}
+		System.out.println(Arrays.toString(dp));
+		for (int i = k; i < arr.length; i++) {
+			int m = arr[i];
+			int n = dp[i - 1] + m;
+			for (int j = i - 1; j > i - k; j--) {
+				m = Math.max(arr[j], m);
+				n = Math.max(n, dp[j - 1] + m * (i - j + 1));
+			}
+			dp[i] = n;
+		}
+		return dp[arr.length - 1];
+	}
+
+	// 1026
+	private int r1026;
+
+	public int maxAncestorDiff(TreeNode root) {
+		r1026 = 0;
+		int min = root.val;
+		int max = root.val;
+		f1026(root, min, max);
+		return r1026;
+	}
+
+	private void f1026(TreeNode node, int min, int max) {
+		if (node == null) {
+			return;
+		}
+		int t = Math.max(Math.abs(node.val - min), Math.abs(node.val - max));
+		r1026 = Math.max(r1026, t);
+		if (node.val < min) {
+			min = node.val;
+		}
+		if (node.val > max) {
+			max = node.val;
+		}
+		f1026(node.left, min, max);
+		f1026(node.right, min, max);
+	}
+
+	// 2409
+	public int countDaysTogether(String arriveAlice, String leaveAlice, String arriveBob, String leaveBob) {
+		int[] note = new int[] { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+		int a1 = Integer.valueOf(arriveAlice.replace("-", ""));
+		int a2 = Integer.valueOf(leaveAlice.replace("-", ""));
+		int b1 = Integer.valueOf(arriveBob.replace("-", ""));
+		int b2 = Integer.valueOf(leaveBob.replace("-", ""));
+
+		if (b1 < a1) {
+			if (b2 < a1) {
+				return 0;
+			}
+			if (b2 < a2) {
+				// a1 - b2
+				return f2409(note, a1, b2);
+			} else {
+				// a1 - a2
+				return f2409(note, a1, a2);
+			}
+		} else if (b1 < a2) {
+			if (b2 < a2) {
+				// b1 - b2
+				return f2409(note, b1, b2);
+			} else {
+				// b1 - a2
+				return f2409(note, b1, a2);
+			}
+		} else {
+			return 0;
+		}
+	}
+
+	private int f2409(int[] note, int l, int r) {
+		int l1 = l / 100;
+		int l2 = l % 100;
+		int r1 = r / 100;
+		int r2 = r % 100;
+		System.out.println(l1);
+		System.out.println(l2);
+		System.out.println(r1);
+		System.out.println(r2);
+		if (l1 == r1) {
+			return r2 - l2 + 1;
+		} else {
+			int res = 0;
+			while (l1 < r1) {
+				res += note[l1] - l2 + 1;
+				l2 = 1;
+				l1++;
+			}
+			res += r2;
+			return res;
+		}
+	}
+
+	// 1023
+	public List<Boolean> camelMatch(String[] queries, String pattern) {
+		List<Boolean> res = new ArrayList<>();
+		for (String query : queries) {
+			res.add(f1023(query, pattern));
+		}
+		return res;
+	}
+
+	private boolean f1023(String query, String pattern) {
+		int i = 0, j = 0;
+		while (i < query.length() && j < pattern.length()) {
+			char q = query.charAt(i), p = pattern.charAt(j);
+			if (q == p) {
+				i++;
+				j++;
+			} else {
+				if (q <= 'Z')
+					return false;
+				i++;
+			}
+		}
+		if (j != pattern.length()) {
+			return false;
+		}
+		while (i < query.length()) {
+			char q = query.charAt(i++);
+			if (q <= 'Z')
+				return false;
+		}
+		return true;
+	}
+
+	// 1147
+	public int longestDecomposition(String text) {
+		if (text.length() < 2) {
+			return 1;
+		}
+		int len = text.length();
+		int i = 0, j = 0, s = 0;
+		int res = 0;
+		StringBuilder l = new StringBuilder();
+		StringBuilder r = new StringBuilder();
+		while (i < len / 2) {
+			l.append(text.charAt(i));
+			r.insert(0, text.charAt(len - i - 1));
+			if (l.toString().equals(r.toString())) {
+				s += (i - j + 1) * 2;
+				System.out.println(s);
+				j = i + 1;
+				res += 2;
+				l = new StringBuilder();
+				r = new StringBuilder();
+			}
+			i++;
+		}
+		System.out.println(s);
+		System.out.println(len);
+		if (s < len) {
+			res++;
+		}
+		return res;
+	}
+
+	// 1019
+	public int[] nextLargerNodes(ListNode head) {
+		List<Integer> list = new ArrayList<>();
+		Stack<Integer> stack = new Stack();
+		for (ListNode node = head; node != null; node = node.next) {
+			while (!stack.isEmpty() && node.val > list.get(stack.peek())) {
+				list.set(stack.pop(), node.val);
+			}
+			stack.push(list.size());
+			list.add(node.val);
+		}
+		for (int i : stack) {
+			list.set(i, 0);
+		}
+		int[] res = new int[list.size()];
+		for (int i = 0; i < res.length; i++) {
+			res[i] = list.get(i);
+		}
+		return res;
+	}
+
 	// 2367
 	public int arithmeticTriplets(int[] nums, int diff) {
 		boolean[] note = new boolean[nums.length + diff + 1];
@@ -48,14 +1969,14 @@ public class _0000_test {
 			note[nums[i]] = true;
 		}
 		return res;
-    }
-	
+	}
+
 	// 777
 	public boolean canTransform(String start, String end) {
 		start = start.replace("X", "");
 		end = end.replace("X", "");
 		return start.equals(end);
-    }
+	}
 
 	// offer II 24
 	public ListNode reverseList_(ListNode head) {
@@ -68,8 +1989,8 @@ public class _0000_test {
 			b = t;
 		}
 		return a;
-    }
-	
+	}
+
 	// 1630
 	public List<Boolean> checkArithmeticSubarrays(int[] nums, int[] l, int[] r) {
 		int len = nums.length;
@@ -507,23 +2428,6 @@ public class _0000_test {
 				note.put(s, 0);
 			}
 		}
-		return res;
-	}
-
-	// 813
-	public double largestSumOfAverages(int[] nums, int k) {
-		Arrays.sort(nums);
-		double res = 0;
-		int s = 0, t = 0, n = nums.length - k + 1;
-		for (int i = nums.length - 1; i >= 0; i--) {
-			if (k > 1) {
-				s += nums[i];
-				k--;
-			} else {
-				t += nums[i];
-			}
-		}
-		res = s + t * 1.0 / n;
 		return res;
 	}
 

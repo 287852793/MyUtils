@@ -94,6 +94,7 @@ public class GeoJSONL2SHP {
 			// end
 			long end = System.currentTimeMillis();
 			System.out.println("finished...");
+			System.out.println("total count : " + i);
 			System.out.println("time : " + (end - start));
 
 		} catch (FileNotFoundException e) {
