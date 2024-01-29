@@ -30,11 +30,429 @@ public class _0000_test {
 		_0000_test test = new _0000_test();
 		long t = System.currentTimeMillis();
 		// test start
-		System.out.println(Math.ceil(4 * 1.0/ 3));
-		System.out.println('0' ^ 1);
+		int[] heights = new int[] { 10, 6, 8, 5, 11, 9 };
+		System.out.println(Arrays.toString(test.canSeePersonsCount(heights)));
 
 		// test end
 		System.out.println("cost time : " + (System.currentTimeMillis() - t));
+	}
+
+	// 2171
+	public long minimumRemoval(int[] beans) {
+		Arrays.sort(beans);
+		long sum = 0;
+		for (int i : beans) {
+			sum += i;
+		}
+		long t = sum;
+		int len = beans.length;
+		for (int i = 0; i < len; i++) {
+			long n = sum - beans[i] * (len - i);
+			t = Math.min(t, n);
+		}
+		return t;
+	}
+
+	// 2707
+	public int minExtraChar(String s, String[] dictionary) {
+
+		int res = 0, i = 0;
+
+		return res;
+	}
+
+	// 1944
+	public int[] canSeePersonsCount(int[] heights) {
+		int[] res = new int[heights.length];
+		Stack<Integer> stack = new Stack<>();
+		for (int i = heights.length - 1; i >= 0; i--) {
+			System.out.println(stack);
+			int t = 0;
+			for (int j = stack.size() - 1; j >= 0; j--) {
+				t++;
+				if (stack.get(j) > heights[i]) {
+					break;
+				}
+			}
+
+			res[i] = t;
+			while (!stack.isEmpty() && stack.peek() <= heights[i]) {
+				stack.pop();
+			}
+			stack.add(heights[i]);
+		}
+
+		return res;
+	}
+
+	// 2866
+	public long maximumSumOfHeights(List<Integer> maxHeights) {
+		int m = maxHeights.get(0);
+		int n = 0;
+		for (int i = 1; i < maxHeights.size(); i++) {
+			if (maxHeights.get(i) > m) {
+				n = i;
+				m = maxHeights.get(i);
+			}
+		}
+
+		long s = m;
+		int t = m;
+		for (int i = n - 1; i >= 0; i--) {
+			if (maxHeights.get(i) < t) {
+				t = maxHeights.get(i);
+			}
+			s += t;
+		}
+		t = m;
+		for (int i = n + 1; i < maxHeights.size(); i++) {
+			if (maxHeights.get(i) < t) {
+				t = maxHeights.get(i);
+			}
+			s += t;
+		}
+		return s;
+	}
+
+	// 2415
+	public TreeNode reverseOddLevels(TreeNode root) {
+		List<TreeNode> list = new ArrayList<>();
+		list.add(root);
+		f2415(list, 0);
+		return root;
+	}
+
+	private void f2415(List<TreeNode> list, int index) {
+		if (list.size() < 1) {
+			return;
+		}
+		if (index % 2 == 1) {
+			for (int i = 0; i < list.size() / 2; i++) {
+				TreeNode a = list.get(i);
+				TreeNode b = list.get(list.size() - i - 1);
+				int t = a.val;
+				a.val = b.val;
+				b.val = t;
+			}
+		}
+		List<TreeNode> next = new ArrayList<>();
+		if (list.get(0).left != null) {
+			for (int i = 0; i < list.size(); i++) {
+				TreeNode t = list.get(i);
+				next.add(t.left);
+				next.add(t.right);
+			}
+		}
+		f2415(next, index++);
+	}
+
+	// 2008
+	public long maxTaxiEarnings(int n, int[][] rides) {
+		long[] note = new long[n];
+
+		return note[n - 1];
+	}
+
+	// 2672
+	public int[] colorTheArray(int n, int[][] queries) {
+		int[] note = new int[n];
+		int[] res = new int[queries.length];
+		note[queries[0][0]] = queries[0][1];
+		for (int i = 1; i < queries.length; i++) {
+			int a = 0, b = 0;
+			if (note[queries[i][0]] != 0) {
+				if (queries[i][0] > 0 && note[queries[i][0]] == note[queries[i][0] - 1]) {
+					a++;
+				}
+				if (queries[i][0] < note.length - 1 && note[queries[i][0]] == note[queries[i][0] + 1]) {
+					a++;
+				}
+			}
+			if (queries[i][0] > 0 && queries[i][1] == note[queries[i][0] - 1]) {
+				b++;
+			}
+			if (queries[i][0] < note.length - 1 && queries[i][1] == note[queries[i][0] + 1]) {
+				b++;
+			}
+			res[i] = res[i - 1] - a + b;
+			note[queries[i][0]] = queries[i][1];
+		}
+
+		return res;
+	}
+
+	private boolean f802(int[][] graph, int i, List<Integer> temp, List<Integer> dangerous, List<Integer> safe) {
+
+		return false;
+	}
+
+	// 802
+	public List<Integer> eventualSafeNodes(int[][] graph) {
+		List<Integer> res = new ArrayList<>();
+		List<Integer> dangerous = new ArrayList<>();
+		List<Integer> safe = new ArrayList<>();
+		List<Integer> temp = new ArrayList<>();
+		int len = graph.length;
+		for (int i = 0; i < len; i++) {
+			if (dangerous.contains(i) || safe.contains(i)) {
+				continue;
+			}
+			boolean flag = f802(graph, i, temp, dangerous, safe);
+		}
+
+		return res;
+
+//		int len = graph.length;
+//		int[] note = new int[len];
+//		for (int i = 0; i < len; i++) {
+//			if (graph[i].length > 0) {
+//				note[i] = 1;
+//			}
+//		}
+//		System.out.println(Arrays.toString(note));
+//		List<Integer> res = new ArrayList<>();
+//		for (int i = 0; i < len; i++) {
+//			boolean flag = true;
+//			for (int j = 0; j < graph[i].length; j++) {
+//				if (note[graph[i][j]] != 0) {
+//					flag = false;
+//					break;
+//				}
+//			}
+//			if (flag) {
+//				res.add(i);
+//			}
+//		}
+//		Collections.sort(res);
+//		return res;
+	}
+
+	// 2023
+	public int numOfPairs(String[] nums, String target) {
+		Map<Integer, Integer> starts = new HashMap<>();
+		Map<Integer, Integer> ends = new HashMap<>();
+		for (String s : nums) {
+			if (target.startsWith(s)) {
+				int len = s.length();
+				starts.put(len, starts.getOrDefault(len, 0) + 1);
+			}
+			if (target.endsWith(s)) {
+				int len = s.length();
+				ends.put(len, ends.getOrDefault(len, 0) + 1);
+			}
+		}
+		System.out.println(starts);
+		System.out.println(ends);
+		int res = 0;
+		int len = target.length();
+		for (Integer i : starts.keySet()) {
+			int j = ends.getOrDefault(len - i, 0);
+			if (i == len - i && target.substring(0, i).equals(target.substring(len - i, len))) {
+				res += starts.get(i) * (j - 1);
+			} else {
+				res += starts.get(i) * j;
+			}
+		}
+		return res;
+	}
+
+	// 1855
+	public int maxDistance(int[] nums1, int[] nums2) {
+		int i = 0, j = 0;
+		while (j < nums2.length) {
+			System.out.println(i + "," + j);
+			if (nums1[i] > nums2[j]) {
+				i++;
+				j++;
+			} else {
+				j++;
+			}
+		}
+		if (j == i) {
+			return 0;
+		} else {
+			return j - i - 1;
+		}
+
+	}
+
+	// 2216
+	public int minDeletion(int[] nums) {
+		int res = 0;
+		boolean flag = true;
+		for (int i = 0; i < nums.length - 1; i++) {
+			if (flag && i % 2 == 0 && nums[i] == nums[i + 1]) {
+				flag = false;
+				res++;
+			} else if (!flag && i % 2 == 1 && nums[i] == nums[i + 1]) {
+				flag = true;
+				res++;
+			}
+		}
+		if ((nums.length + res) % 2 == 1) {
+			res++;
+		}
+		return res;
+	}
+
+	// 2736
+	public int[] maximumSumQueries(int[] nums1, int[] nums2, int[][] queries) {
+		int[][] note1 = new int[nums1.length][2];
+		int[][] note2 = new int[nums2.length][2];
+		for (int i = 0; i < note1.length; i++) {
+			note1[i][0] = nums1[i];
+			note1[i][1] = nums2[i];
+			note2[i][0] = nums1[i];
+			note2[i][1] = nums2[i];
+		}
+		Arrays.sort(note1, (o1, o2) -> {
+			return o2[0] - o1[0];
+		});
+		Arrays.sort(note2, (o1, o2) -> {
+			return o2[1] - o1[1];
+		});
+//		for (int i = 0; i < note1.length; i++) {
+//			System.out.println(Arrays.toString(note1[i]));
+//		}
+		int[] res = new int[queries.length];
+		for (int i = 0; i < queries.length; i++) {
+			int n = -1;
+			for (int j = 0; j < note1.length; j++) {
+				if (note1[j][0] < queries[i][0]) {
+					break;
+				} else if (note1[j][1] >= queries[i][1]) {
+					int t = note1[j][0] + note1[j][1];
+					n = Math.max(n, t);
+				}
+				if (note2[j][1] < queries[i][1]) {
+					break;
+				} else if (note2[j][0] >= queries[i][0]) {
+					int t = note2[j][0] + note2[j][1];
+					n = Math.max(n, t);
+				}
+			}
+			res[i] = n;
+		}
+		return res;
+	}
+
+	// 68
+	public List<String> fullJustify(String[] words, int maxWidth) {
+		int[] len = new int[words.length];
+		for (int i = 0; i < len.length; i++) {
+			len[i] = words[i].length();
+		}
+		int i = 0, j = 1;
+		int n = len[0];
+		List<String> res = new ArrayList<>();
+		while (j < words.length) {
+			if (n + 1 + len[j] < maxWidth) {
+				i++;
+				n = n + 1 + len[j];
+			} else {
+
+				int t = maxWidth - n - (j - i - 1);
+
+			}
+		}
+		return res;
+	}
+
+	// 135
+	public int candy(int[] ratings) {
+		int len = ratings.length;
+		int[] left = new int[len];
+		left[0] = 1;
+		for (int i = 1; i < len; i++) {
+			if (ratings[i] > ratings[i - 1]) {
+				left[i] = left[i - 1] + 1;
+			} else {
+				left[i] = 1;
+			}
+		}
+		int[] right = new int[len];
+		right[len - 1] = 1;
+		for (int i = len - 2; i >= 0; i--) {
+			if (ratings[i] > ratings[i + 1]) {
+				right[i] = right[i + 1] + 1;
+			} else {
+				right[i] = 1;
+			}
+		}
+		System.out.println(Arrays.toString(left));
+		System.out.println(Arrays.toString(right));
+		int res = 0;
+		for (int i = 0; i < len; i++) {
+			res += Math.max(left[i], right[i]);
+		}
+		return res;
+	}
+
+	// 274
+	public int hIndex(int[] citations) {
+		int len = citations.length;
+		Arrays.sort(citations);
+		for (int i = 0; i < len; i++) {
+			if (citations[i] >= len - i) {
+				return len - i;
+			}
+		}
+		return 0;
+	}
+
+	// mianshi 02.04
+	public ListNode partition(ListNode head, int x) {
+		ListNode root = new ListNode(Integer.MIN_VALUE);
+		root.next = head;
+		ListNode a = root, b = head;
+		while (b != null) {
+			if (b.val < x) {
+				ListNode m = root.next;
+				ListNode n = b.next;
+				root.next = b;
+				b.next = m;
+				a.next = n;
+			}
+			a = b;
+			b = b.next;
+		}
+		return root.next;
+	}
+
+	// 2300
+	public int[] successfulPairs(int[] spells, int[] potions, long success) {
+		int[] res = new int[spells.length];
+		Arrays.sort(potions);
+		return res;
+	}
+
+	// 117
+	public Node connect(Node root) {
+		List<Node> list = new ArrayList<>();
+		list.add(root);
+		while (!list.isEmpty()) {
+			List<Node> nextList = new ArrayList<>();
+			for (int i = 0; i < list.size() - 1; i++) {
+				Node t = list.get(i);
+				list.get(i).next = list.get(i + 1);
+				if (t.left != null) {
+					nextList.add(t.left);
+				}
+				if (t.right != null) {
+					nextList.add(t.right);
+				}
+			}
+			Node t = list.get(list.size() - 1);
+			if (t.left != null) {
+				nextList.add(t.left);
+			}
+			if (t.right != null) {
+				nextList.add(t.right);
+			}
+			list = nextList;
+
+		}
+		return root;
 	}
 
 	// 2530
@@ -53,7 +471,7 @@ public class _0000_test {
 		for (int i = 0; i < k; i++) {
 			Integer n = queue.poll();
 			s += n;
-			n = (int)(Math.ceil(n  * 1.0 / 3));
+			n = (int) (Math.ceil(n * 1.0 / 3));
 			queue.offer(n);
 		}
 		return s;
@@ -563,27 +981,27 @@ public class _0000_test {
 	}
 
 	// 135
-	public int candy(int[] ratings) {
-		int t = 1, sum = 1;
-		for (int i = 1; i < ratings.length; i++) {
-			if (ratings[i] > ratings[i - 1]) {
-				t++;
-				sum += t;
-			} else if (ratings[i] == ratings[i - 1]) {
-				if (t > 1) {
-					t--;
-				}
-				sum += t;
-			} else {
-				if (t > 1) {
-					t--;
-					sum += t;
-				} else {
-				}
-			}
-		}
-		return sum;
-	}
+//	public int candy(int[] ratings) {
+//		int t = 1, sum = 1;
+//		for (int i = 1; i < ratings.length; i++) {
+//			if (ratings[i] > ratings[i - 1]) {
+//				t++;
+//				sum += t;
+//			} else if (ratings[i] == ratings[i - 1]) {
+//				if (t > 1) {
+//					t--;
+//				}
+//				sum += t;
+//			} else {
+//				if (t > 1) {
+//					t--;
+//					sum += t;
+//				} else {
+//				}
+//			}
+//		}
+//		return sum;
+//	}
 
 	// 2594
 	public long repairCars(int[] ranks, int cars) {
