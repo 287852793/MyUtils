@@ -54,37 +54,37 @@
         <dependency>
             <groupId>org.geotools</groupId>
             <artifactId>gt-main</artifactId>
-            <version>21.2</version>
+            <version>23.3</version>
         </dependency>
         <dependency>
             <groupId>org.geotools</groupId>
             <artifactId>gt-shapefile</artifactId>
-            <version>21.2</version>
+            <version>23.3</version>
         </dependency>
         <dependency>
             <groupId>org.geotools</groupId>
             <artifactId>gt-epsg-hsql</artifactId>
-            <version>21.2</version>
+            <version>23.3</version>
         </dependency>
         <dependency>
             <groupId>org.geotools</groupId>
             <artifactId>gt-geometry</artifactId>
-            <version>21.2</version>
+            <version>23.3</version>
         </dependency>
         <dependency>
             <groupId>org.geotools</groupId>
             <artifactId>gt-geojson</artifactId>
-            <version>21.2</version>
+            <version>23.3</version>
         </dependency>
         <dependency>
             <groupId>org.geotools</groupId>
             <artifactId>gt-geotiff</artifactId>
-            <version>21.2</version>
+            <version>23.3</version>
         </dependency>
         <dependency>
             <groupId>org.geotools</groupId>
             <artifactId>gt-render</artifactId>
-            <version>21.2</version>
+            <version>23.3</version>
         </dependency>
         <dependency>
             <groupId>org.locationtech.proj4j</groupId>

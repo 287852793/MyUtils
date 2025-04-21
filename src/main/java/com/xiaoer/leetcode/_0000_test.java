@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import sun.misc.Unsafe;
+
 import java.lang.reflect.Field;
 
 @SuppressWarnings("restriction")
@@ -30,11 +31,201 @@ public class _0000_test {
 		_0000_test test = new _0000_test();
 		long t = System.currentTimeMillis();
 		// test start
-		int[] heights = new int[] { 10, 6, 8, 5, 11, 9 };
-		System.out.println(Arrays.toString(test.canSeePersonsCount(heights)));
+
+		int[] apples = new int[] { 1, 2, 3, 5, 2 };
+		int[] days = new int[] { 3, 2, 1, 4, 2 };
+		System.out.println(test.eatenApples(apples, days));
 
 		// test end
 		System.out.println("cost time : " + (System.currentTimeMillis() - t));
+	}
+
+	// 1705
+	public int eatenApples(int[] apples, int[] days) {
+		int res = 0;
+
+		PriorityQueue<int[]> queue = new PriorityQueue<int[]>((i, j) -> {
+			return i[0] - j[0];
+		});
+
+		int i = 0;
+		while (i < apples.length || !queue.isEmpty()) {
+			if (i < apples.length) {
+				queue.offer(new int[] { days[i] + i, apples[i] });
+			}
+			
+//			System.out.println("===" + queue.size());
+//			queue.forEach(o -> {
+//				System.out.println(Arrays.toString(o));
+//			});
+			
+			while (!queue.isEmpty()) {
+				int[] tmp = queue.poll();
+				if (tmp[0] <= i || tmp[1] <= 0) {
+					continue;
+				}
+				res++;
+				tmp[1]--;
+				if (tmp[1] > 0) {
+					queue.offer(tmp);
+				}
+				break;
+			}
+			
+			i++;
+		}
+
+		return res;
+	}
+
+	// 2079
+	public int wateringPlants(int[] plants, int capacity) {
+		int res = 0;
+		int t = capacity;
+		for (int i = 0; i < plants.length; i++) {
+			if (t >= plants[i]) {
+				t = t - plants[i];
+			} else {
+				res += i * 2;
+				t = t - plants[i];
+			}
+		}
+		res += plants.length;
+		return res;
+	}
+
+	// 2385
+//	public int amountOfTime(TreeNode root, int start) {
+//		
+//    }
+
+	// 1702
+	public String maximumBinaryString(String binary) {
+		char[] arr = binary.toCharArray();
+		int len = binary.length();
+		int i = binary.indexOf("0"), j = i + 1;
+		while (j < len) {
+			if (arr[j] == '0') {
+				arr[i] = '1';
+				i++;
+				if (arr[i] == '1') {
+					arr[i] = '0';
+					arr[j] = '1';
+				}
+			}
+			j++;
+		}
+		return new String(arr);
+	}
+
+	// 894
+	public List<TreeNode> allPossibleFBT(int n) {
+		List<TreeNode> res = new ArrayList<>();
+
+		return res;
+	}
+
+	private void f894() {
+
+	}
+
+	// 2908
+	public int minimumSum(int[] nums) {
+		int len = nums.length - 1;
+		int l1 = nums[0], l2 = Integer.MAX_VALUE;
+		int r1 = nums[len], r2 = Integer.MAX_VALUE;
+		for (int i = 1; i < len; i++) {
+			if (nums[i] < l1) {
+				l2 = l1;
+				l1 = nums[i];
+			} else if (nums[i] < l2) {
+				l2 = nums[i];
+			}
+
+			if (nums[len - i] < r1) {
+				r2 = r1;
+				r1 = nums[len - i];
+			} else if (nums[len - i] < r2) {
+
+			}
+
+		}
+
+		return 0;
+	}
+
+	// 2580
+	public int countWays(int[][] ranges) {
+		Arrays.sort(ranges, (a, b) -> {
+			if (a[0] == b[0]) {
+				return a[1] - b[1];
+			} else {
+				return a[0] - b[0];
+			}
+		});
+
+		int a = ranges[0][0], b = ranges[0][1];
+		int s = 1;
+		for (int i = 1; i < ranges.length; i++) {
+			if (ranges[i][0] <= b) {
+				b = Math.max(b, ranges[i][1]);
+			} else {
+				s++;
+				a = ranges[i][0];
+				b = ranges[i][1];
+			}
+		}
+
+		return (int) ((Math.pow(2, s)) % (10e9 + 7));
+	}
+
+	// 1793
+	public int maximumScore(int[] nums, int k) {
+		int i = k, j = k;
+		int min = nums[k];
+		int score = nums[k];
+		// 固定左侧值，往右侧找更合适的值
+		while (i >= 0) {
+			j++;
+			while (j < nums.length) {
+				min = Math.min(min, nums[j]);
+				score = Math.max(score, min * (j - i + 1));
+			}
+			i--;
+			j = k;
+
+		}
+		return score;
+	}
+
+	// 2342
+	public int maximumSum(int[] nums) {
+		Map<Integer, Integer> note = new HashMap<>();
+		int res = -1;
+		for (int i = 0; i < nums.length; i++) {
+			int t = f2342(nums[i]);
+			if (note.containsKey(t)) {
+				int n = note.get(t) + nums[i];
+				System.out.println(note.get(t) + " & " + nums[i] + " = " + n);
+				res = Math.max(n, res);
+				if (nums[i] > note.get(t)) {
+					note.put(t, nums[i]);
+				}
+			} else {
+				note.put(t, nums[i]);
+			}
+		}
+		System.out.println(note);
+		return res;
+	}
+
+	private int f2342(int num) {
+		int s = 0;
+		while (num > 0) {
+			s += num % 10;
+			num = num / 10;
+		}
+		return s;
 	}
 
 	// 2171
@@ -85,7 +276,7 @@ public class _0000_test {
 		return res;
 	}
 
-	// 2866
+	// 2866 用 map 比用 数组 慢一倍
 	public long maximumSumOfHeights(List<Integer> maxHeights) {
 		int m = maxHeights.get(0);
 		int n = 0;
@@ -1281,7 +1472,7 @@ public class _0000_test {
 //		int s1 = 0, s2 = 0;
 //		// i1 为 m1 的位置，i2 为 m2 的位置
 //		int i1 = -1, i2 = -1;
-//		
+//
 //		for (int i = 0; i < grid.length; i++) {
 //			int m1 = -100, m2 = -100;
 //			int t1 = -1, t2 = -1;
@@ -1292,13 +1483,13 @@ public class _0000_test {
 //					m1 = grid[i][j];
 //					t1 = j;
 //				} else if (grid[i][j] <) {
-//					
+//
 //				}
 //			}
 //		}
-//		
-//		
-//		
+//
+//
+//
 		return 0;
 	}
 
@@ -2059,7 +2250,9 @@ public class _0000_test {
 			return true;
 		}
 		return false;
-	};
+	}
+
+	;
 
 	// 1031
 	public int maxSumTwoNoOverlap(int[] nums, int firstLen, int secondLen) {
@@ -2181,7 +2374,7 @@ public class _0000_test {
 //		Arrays.sort(arr2);
 //		int t = arr1[0];
 //		for (int i = 1; i < arr1.length; i++) {
-//			
+//
 //		}
 		int res = 0;
 		return res;
@@ -2975,7 +3168,7 @@ public class _0000_test {
 //					note[i] = Math.max(note[i], note[j] + questions[i][0]);
 //				}
 //			}
-//			
+//
 //		}
 //		return Arrays.stream(note).max().getAsLong();
 	}
@@ -3971,7 +4164,7 @@ public class _0000_test {
 //					r[t] = nums.get(a).get(b);
 //					t++;
 //				}
-//				
+//
 //				a--;
 //				b++;
 //			}
@@ -4345,7 +4538,7 @@ public class _0000_test {
 //					break;
 //				}
 //				i++;
-//				
+//
 //			}
 //			r.add(i + 1);
 //			s = s.substring(i + 1);
@@ -4489,7 +4682,7 @@ public class _0000_test {
 		return r;
 	}
 
-//	private Map<Integer, Boolean> p464 = new HashMap<>();
+	// private Map<Integer, Boolean> p464 = new HashMap<>();
 	private int[] p464 = new int[1 << 21];
 
 	// 464
@@ -5195,7 +5388,7 @@ public class _0000_test {
 	// 462
 //	public int minMoves2(int[] nums) {
 //		for (int i : nums) {
-//			
+//
 //		}
 //    }
 
@@ -5211,10 +5404,10 @@ public class _0000_test {
 //		inorderSuccessor2(root.right, p);
 //		return null;
 //    }
-//	
+//
 //	private boolean f2562(TreeNode n, TreeNode p) {
-//		
-//		return false; 
+//
+//		return false;
 //	}
 
 	// 2530
@@ -5402,7 +5595,7 @@ public class _0000_test {
 //		for (int i = 0; i < bookings.length; i++) {
 //			int[] data = bookings[i];
 //			for (int j = data[0]; j <= data[1]; j++) {
-//				
+//
 //				r[j - 1] += data[2];
 //			}
 //		}
@@ -8426,7 +8619,9 @@ public class _0000_test {
 			return true;
 		}
 		return false;
-	};
+	}
+
+	;
 
 	// 786
 	public int[] kthSmallestPrimeFraction(int[] arr, int k) {
@@ -10456,7 +10651,7 @@ public class _0000_test {
 //		}
 //		for (int i = 0; i < words.length; i++) {
 //			char[] arr = words[i].toCharArray();
-//			
+//
 //		}
 		List<String> list = new ArrayList<String>();
 
@@ -10737,7 +10932,7 @@ public class _0000_test {
 //			if (Arrays.stream(properties).filter(e -> e[0] > item[0] && e[1] > item[1]).findAny().orElseGet(null) != null) {
 //				r++;
 //			}
-//			
+//
 //		});
 //		return r;
 //    }
